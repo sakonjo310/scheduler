@@ -22,8 +22,13 @@ export default function Appointment(props) {
       student: name,
       interviewer
     };
-    props.bookInterview(props.id, interview)
-    transition(SHOW);
+    // props.bookInterview(props.id, interview)
+    // transition(SHOW);
+
+    transition(SAVING);
+    Promise.resolve(props.bookInterview(props.id, interview))
+      .then(() => transition(SHOW))
+      .catch(err => console.log("error from promise:", err))
   }
   
   return (
@@ -40,6 +45,11 @@ export default function Appointment(props) {
           interviewers={props.interviewers}
           onCancel={back}
           onSave={save}
+        />
+      )}
+      {mode === SAVING && (
+        <Status
+          message="Saving"
         />
       )}
     </article>
