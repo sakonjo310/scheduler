@@ -28,12 +28,29 @@ export default function Application(props) {
       [id]: appointment
     };
 
-    // setState({...state, appointments});
     return axios
       .put(`/api/appointments/${id}`, {interview})
       .then(() => setState({...state, appointments}))
       .catch(err => console.log('error from axios request:', err))
   }
+
+  const cancelInterview = id => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    return axios
+      .delete(`/api/appointments/${id}`)
+      .then(() => setState({...state, appointments}))
+      .catch(err => console.log('error from axios request:', err))
+  }
+
 
   useEffect(() => {
     Promise.all([
@@ -61,6 +78,7 @@ export default function Application(props) {
       interview={interview}
       interviewers={interviewers}
       bookInterview={bookInterview}
+      cancelInterview={cancelInterview}
     />)
   })
 
