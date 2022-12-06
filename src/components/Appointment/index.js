@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Empty from './Empty';
 import Show from './Show';
 import Form from './Form';
@@ -34,6 +34,15 @@ export default function Appointment(props) {
       .catch(err => transition(ERROR_SAVE, true))
   }
 
+  useEffect(() => {
+    if (props.interview && mode === EMPTY) {
+      transition(SHOW);
+    }
+    if (!props.interview && mode === SHOW) {
+      transition(EMPTY);
+    }
+  }, [props.interview, transition, mode]);
+
   function deleteAppointment() {
     transition(DELETING, true);
     Promise.resolve(props.cancelInterview(props.id))
@@ -45,7 +54,7 @@ export default function Appointment(props) {
     <article className="appointment">
       <header>{props.time}</header>
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
-      {mode === SHOW && (
+      {mode === SHOW && props.interview && (
         <Show
           id={props.id}
           student={props.interview.student}

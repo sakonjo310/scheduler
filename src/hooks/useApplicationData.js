@@ -1,6 +1,8 @@
 import { useEffect, useReducer } from "react";
 import axios from "axios";
 
+const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+
 export default function useApplicationData() {
 
   const SET_DAY = "SET_DAY";
@@ -85,6 +87,17 @@ export default function useApplicationData() {
 
 
   useEffect(() => {
+    // webSocket.onopen = (event) => {
+    //   webSocket.send("ping")
+    // }
+    // webSocket.onmessage = (event) => {
+    //   console.log("message received:", event.data)
+    // }
+    webSocket.onmessage = function (event) {
+      console.log(event.data)
+      const { id, interview } = JSON.parse(event.data)
+      dispatch({ type: SET_INTERVIEW, id, interview})
+    }
     Promise.all([
       axios.get('/api/days'),
       axios.get('/api/appointments'),
@@ -97,7 +110,8 @@ export default function useApplicationData() {
         interviewers: all[2].data
       })
     })
-  }, [])
+    return () => webSocket.close();
+  })
   
   return {state, setDay, bookInterview, cancelInterview};
 }
