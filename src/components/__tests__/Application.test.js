@@ -1,5 +1,5 @@
 import React from "react";
-import { render, cleanup, waitForElement, fireEvent, prettyDOM, getByText, getAllByTestId, queryByText, getByAltText, getByPlaceholderText, waitForElementToBeRemoved } from "@testing-library/react";
+import { render, cleanup, waitForElement, fireEvent, getByText, getAllByTestId, queryByText, getByAltText, getByPlaceholderText, waitForElementToBeRemoved } from "@testing-library/react";
 import Application from "components/Application";
 import axios from "axios";
 
