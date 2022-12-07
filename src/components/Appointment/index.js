@@ -5,6 +5,7 @@ import Form from './Form';
 import Status from './Status';
 import Confirm from './Confirm';
 import Error from './Error';
+import Header from './Header';
 import './styles.scss'
 import useVisualMode from 'hooks/useVisualMode';
 
@@ -53,7 +54,7 @@ export default function Appointment(props) {
   
   return (
     <article className="appointment" data-testid="appointment">
-      <header>{props.time}</header>
+      <Header time={props.time} />
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
       {mode === SHOW && props.interview && (
         <Show
