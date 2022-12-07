@@ -25,12 +25,9 @@ export default function useApplicationData() {
           ...state.appointments,
           [action.id]: appointment
         };
-        console.log("appointments:", appointments)
         const currentDay = state.days.find(day => day.name === state.day);
         const indexOfDay = state.days.findIndex(day => day.name === state.day);
         const countSpotsForDay = (newAppointments) => {
-          // console.log(currentDay)
-          // console.log("newApp:", newAppointments)
           const listOfAppointmentIds = currentDay.appointments;
           const listOfAppointmentSpots = listOfAppointmentIds.filter(
             id => !newAppointments[id].interview
@@ -38,10 +35,8 @@ export default function useApplicationData() {
           const amountOfSpots = listOfAppointmentSpots.length;
           return amountOfSpots;
         }
-        // console.log("action:", action)
         const spots = countSpotsForDay(appointments);
         
-        // console.log("spots:", countSpotsForDay(state, action.appointments))
         const day = {
           ...state.days[indexOfDay],
           spots: spots
@@ -84,7 +79,6 @@ export default function useApplicationData() {
 
   useEffect(() => {
     webSocket.onmessage = function (event) {
-      // console.log("Event data", event.data)
       const { id, interview, appointments } = JSON.parse(event.data)
       dispatch({ type: SET_INTERVIEW, id, interview, appointments})
     }
