@@ -16,9 +16,21 @@ export default function useApplicationData() {
       case SET_APPLICATION_DATA:
         return { ...state, days: action.days, appointments: action.appointments, interviewers: action.interviewers }
       case SET_INTERVIEW: {
+        const appointment = {
+          ...state.appointments[action.id],
+          interview: action.interview ? {...action.interview} : null
+        };
+        
+        const appointments = {
+          ...state.appointments,
+          [action.id]: appointment
+        };
+        console.log("appointments:", appointments)
         const currentDay = state.days.find(day => day.name === state.day);
         const indexOfDay = state.days.findIndex(day => day.name === state.day);
         const countSpotsForDay = (newAppointments) => {
+          // console.log(currentDay)
+          // console.log("newApp:", newAppointments)
           const listOfAppointmentIds = currentDay.appointments;
           const listOfAppointmentSpots = listOfAppointmentIds.filter(
             id => !newAppointments[id].interview
@@ -26,7 +38,9 @@ export default function useApplicationData() {
           const amountOfSpots = listOfAppointmentSpots.length;
           return amountOfSpots;
         }
-        const spots = countSpotsForDay(action.appointments);
+        // console.log("action:", action)
+        const spots = countSpotsForDay(appointments);
+        
         // console.log("spots:", countSpotsForDay(state, action.appointments))
         const day = {
           ...state.days[indexOfDay],
@@ -35,7 +49,7 @@ export default function useApplicationData() {
         const days = [...state.days];
         days.splice(indexOfDay, 1, day)
     
-        return { ...state, appointments: action.appointments, days }
+        return { ...state, appointments, days }
       }
     default:
       throw new Error(
@@ -54,49 +68,25 @@ export default function useApplicationData() {
   })
       
   function bookInterview(id, interview) {
-    const appointment = {
-      ...state.appointments[id],
-      interview: {...interview}
-    };
-    
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
     
     return axios
       .put(`/api/appointments/${id}`, {interview})
-      .then(() => dispatch({ type: SET_INTERVIEW, appointments}))
+      .then(() => dispatch({ type: SET_INTERVIEW, id, interview}))
   }
 
   const cancelInterview = id => {
-    const appointment = {
-      ...state.appointments[id],
-      interview: null
-    };
-
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-
+    
     return axios
       .delete(`/api/appointments/${id}`)
-      .then(() => dispatch({ type: SET_INTERVIEW, appointments}))
+      .then(() => dispatch({ type: SET_INTERVIEW, id, interview: null}))
   }
 
 
   useEffect(() => {
-    // webSocket.onopen = (event) => {
-    //   webSocket.send("ping")
-    // }
-    // webSocket.onmessage = (event) => {
-    //   console.log("message received:", event.data)
-    // }
     webSocket.onmessage = function (event) {
-      console.log(event.data)
-      const { id, interview } = JSON.parse(event.data)
-      dispatch({ type: SET_INTERVIEW, id, interview})
+      // console.log("Event data", event.data)
+      const { id, interview, appointments } = JSON.parse(event.data)
+      dispatch({ type: SET_INTERVIEW, id, interview, appointments})
     }
     Promise.all([
       axios.get('/api/days'),
@@ -111,7 +101,7 @@ export default function useApplicationData() {
       })
     })
     return () => webSocket.close();
-  })
+  }, [])
   
   return {state, setDay, bookInterview, cancelInterview};
 }

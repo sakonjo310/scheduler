@@ -28,6 +28,7 @@ export default function Appointment(props) {
       interviewer
     };
   
+    if (!interviewer || !name) return transition(ERROR_SAVE);
     transition(SAVING);
     Promise.resolve(props.bookInterview(props.id, interview))
       .then(() => transition(SHOW))
@@ -49,7 +50,7 @@ export default function Appointment(props) {
       .then(() => transition(EMPTY))
       .catch(err => transition(ERROR_DELETE, true))
   }
-  
+  console.log("mode:", mode, "props:", props)
   return (
     <article className="appointment">
       <header>{props.time}</header>
