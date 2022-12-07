@@ -25,24 +25,42 @@ export default function useApplicationData() {
           ...state.appointments,
           [action.id]: appointment
         };
-        const currentDay = state.days.find(day => day.name === state.day);
-        const indexOfDay = state.days.findIndex(day => day.name === state.day);
-        const countSpotsForDay = (newAppointments) => {
-          const listOfAppointmentIds = currentDay.appointments;
-          const listOfAppointmentSpots = listOfAppointmentIds.filter(
-            id => !newAppointments[id].interview
-          );
-          const amountOfSpots = listOfAppointmentSpots.length;
-          return amountOfSpots;
-        }
-        const spots = countSpotsForDay(appointments);
+        // const currentDay = state.days.find(day => day.name === state.day);
+        // const indexOfDay = state.days.findIndex(day => day.name === state.day);
+        // const countSpotsForDay = (newAppointments) => {
+        //   const listOfAppointmentIds = currentDay.appointments;
+        //   const listOfAppointmentSpots = listOfAppointmentIds.filter(
+        //     id => !newAppointments[id].interview
+        //   );
+        //   const amountOfSpots = listOfAppointmentSpots.length;
+        //   return amountOfSpots;
+        // }
+        // const spots = countSpotsForDay(appointments);
         
-        const day = {
-          ...state.days[indexOfDay],
-          spots: spots
+        // const day = {
+        //   ...state.days[indexOfDay],
+        //   spots: spots
+        // }
+        // const days = [...state.days];
+        // days.splice(indexOfDay, 1, day)
+
+        const updateSpots = function(state, appointments){
+
+          const currentDay = state.days.find(day => day.name === state.day);
+      
+          const emptyAppointmentsForDay = currentDay.appointments.filter((id) => !appointments[id].interview);
+      
+          const emptySpots = emptyAppointmentsForDay.length;
+      
+          const updatedDay = {...currentDay, spots: emptySpots};
+      
+          const updatedDays = state.days.map(day => day.name === state.day ? updatedDay : day)
+      
+          return updatedDays
+      
         }
-        const days = [...state.days];
-        days.splice(indexOfDay, 1, day)
+
+        const days = updateSpots(state, appointments)
     
         return { ...state, appointments, days }
       }
