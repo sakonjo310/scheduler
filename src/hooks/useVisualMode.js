@@ -2,53 +2,20 @@ import { useState } from 'react';
 
 export default function useVisualMode(initial) {
   const [history, setHistory] = useState([initial]);
-  
+
+/// Transition from one state to another ///
   function transition(newMode, replace = false) {
     setHistory(prev => replace ? [...prev.slice(0,-1), newMode] : [...prev, newMode]);
   }
-  
+
+/// Function to go back to the previous state ///
   function back() {
     if (history.length <= 1) return;
     setHistory(prev => prev.slice(0,-1))
   }
-  
+
+/// Set mode to the last state ///
   const mode = history[history.length - 1]
+  
   return { mode, transition, back };
 }
-
-// export default function useVisualMode(initial) {
-//   // const [mode, setMode] = useState(initial);
-//   const [history, setHistory] = useState([initial]);
-
-//   function transition(newMode, replace = false) {
-//     // setMode(newMode);
-    
-//     // if(replace) {
-//     //   setHistory(prev => [...prev.slice(0, -1)]);
-//     // }
-//     setHistory(prev => {
-//       const newHistory = [...prev];
-//       if (replace) {
-//         newHistory.pop();
-//       }
-//       newHistory.push(newMode)
-//       return newHistory;
-//     })
-
-//     // setHistory(prev => [...prev, newMode]);
-//   }
-
-//   function back() {
-//     if (history.length < 2) {
-//       return;
-//     }
-    
-//     setHistory(prev => prev.slice(0,-1))
-//     // setMode(newHistory.slice(-1));
-//     // return newHistory;
-
-//   }
-
-//   const mode = history[history.length - 1]
-//   return { mode, transition, back };
-// }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import Empty from './Empty';
 import Show from './Show';
 import Form from './Form';
@@ -6,36 +6,40 @@ import Status from './Status';
 import Confirm from './Confirm';
 import Error from './Error';
 import Header from './Header';
-import './styles.scss'
+import './styles.scss';
 import useVisualMode from 'hooks/useVisualMode';
 
 export default function Appointment(props) {
+/// Setup Mode ///
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
-  const CREATE = "CREATE"
-  const SAVING = "SAVING"
-  const DELETING = "DELETING"
-  const CONFIRM = "CONFIRM"
-  const EDIT = "EDIT"
-  const ERROR_SAVE = "ERROR_SAVE"
-  const ERROR_DELETE = "ERROR_DELETE"
+  const CREATE = "CREATE";
+  const SAVING = "SAVING";
+  const DELETING = "DELETING";
+  const CONFIRM = "CONFIRM";
+  const EDIT = "EDIT";
+  const ERROR_SAVE = "ERROR_SAVE";
+  const ERROR_DELETE = "ERROR_DELETE";
+
+/// Custom Hook ///
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
 
+/// Save Function ///
   function save(interviewer, name) {
     const interview = {
       student: name,
       interviewer
     };
   
-    // if (!interviewer || !name) return transition(ERROR_SAVE);
     transition(SAVING);
     Promise.resolve(props.bookInterview(props.id, interview))
       .then(() => transition(SHOW))
       .catch(err => transition(ERROR_SAVE, true))
   }
 
+/// Update state based on the value of interview ///
   useEffect(() => {
     if (props.interview && mode === EMPTY) {
       transition(SHOW);
@@ -51,7 +55,8 @@ export default function Appointment(props) {
       .then(() => transition(EMPTY))
       .catch(err => transition(ERROR_DELETE, true))
   }
-  
+
+/// Return statement for Appointment component ///
   return (
     <article className="appointment" data-testid="appointment">
       <Header time={props.time} />

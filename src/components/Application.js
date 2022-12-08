@@ -6,7 +6,7 @@ import { getAppointmentsForDay, getInterviewersForDay, getInterview } from "help
 import useApplicationData from "hooks/useApplicationData";
 
 export default function Application(props) {
-
+/// Logic part ///
   const {
     state,
     setDay,
@@ -31,6 +31,7 @@ export default function Application(props) {
     />)
   })
 
+/// Return statement of Application component ///
   return (
     <main className="layout">
       <section className="sidebar">

@@ -6,35 +6,37 @@ import reducer, {
   SET_INTERVIEW
 } from "reducers/application";
 
-const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
 
 export default function useApplicationData() {
 
+/// Set the current day ///  
   const setDay = day => dispatch({ type: SET_DAY, day });
 
+/// Set states ///
   const [state, dispatch] = useReducer(reducer, {
     day:"Monday",
     days: [],
     appointments: {},
     interviewers: []
   })
-      
+
+/// Book interview function  
   function bookInterview(id, interview) {
-    
     return axios
-      .put(`/api/appointments/${id}`, {interview})
-      .then(() => dispatch({ type: SET_INTERVIEW, id, interview}))
+    .put(`/api/appointments/${id}`, {interview})
+    .then(() => dispatch({ type: SET_INTERVIEW, id, interview}))
   }
 
+/// Cancel interveiw function  
   const cancelInterview = id => {
-    
     return axios
-      .delete(`/api/appointments/${id}`)
-      .then(() => dispatch({ type: SET_INTERVIEW, id, interview: null}))
+    .delete(`/api/appointments/${id}`)
+    .then(() => dispatch({ type: SET_INTERVIEW, id, interview: null}))
   }
-
-
+  
+/// Axios request to the server ///  
   useEffect(() => {
+    const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
     webSocket.onmessage = function (event) {
       const { id, interview, appointments } = JSON.parse(event.data)
       dispatch({ type: SET_INTERVIEW, id, interview, appointments})
