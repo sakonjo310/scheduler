@@ -2,15 +2,19 @@
 The Scheduler client application created using Create React App. This app allows users to book, edit or cancel interviews instantly, and Users can see the live updates of the available spots. It is deployed on the cloud using Netlify and Railway, and can be accessed [here](https://magenta-queijadas-2aef5a.netlify.app/).
 ## How to use Scheduler
 Create an appointment:
+<br />
 <img src="public/createAppointment.gif" alt="Create an appointment" style="width:600px"/>
 
 Edit an appointment:
+<br />
 <img src="public/editAppointment.gif" alt="Edit an appointment" style="width:600px"/>
 
 Delete an appointment:
+<br />
 <img src="public/deleteAppointment.gif" alt="Delete an appointment" style="width:600px"/>
 
 Live updates!
+<br />
 <img src="public/liveUpdates.gif" alt="Delete an appointment" style="width:600px"/>
 
 ## Features
